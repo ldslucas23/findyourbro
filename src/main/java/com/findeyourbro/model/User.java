@@ -37,10 +37,15 @@ public class User implements Serializable, UserDetails{
     private String password;
     private String gender;
     private LocalDateTime birthDate;
+    @JsonIgnore
+    private String profileImageKey;
+    @Transient
+    private String profileImageBase64;
+    private String profileImageName;
     @ManyToMany(cascade=CascadeType.PERSIST)
     @JoinTable(name="user_preferences", joinColumns=
     {@JoinColumn(name="user_id")}, inverseJoinColumns=
-      {@JoinColumn(name="preference_id")})
+    {@JoinColumn(name="preference_id")})
     private List<Preference> preferences;
     @Transient
     @JsonIgnore
@@ -67,6 +72,12 @@ public class User implements Serializable, UserDetails{
     public void setGender(String gender) {this.gender = gender;}
     public LocalDateTime getBirthDate() {return birthDate;}
     public void setBirthDate(LocalDateTime birthDate) {this.birthDate = birthDate;}
+    public String getProfileImageBase64() {return profileImageBase64;}
+    public void setProfileImageBase64(String profileImageBase64) {this.profileImageBase64 = profileImageBase64;}
+    public String getProfileImageName() {return profileImageName;}
+    public void setProfileImageName(String profileImageName) {this.profileImageName = profileImageName;}  
+    public String getProfileImageKey() {return profileImageKey;}
+    public void setProfileImageKey(String profileImageKey) {this.profileImageKey = profileImageKey;}
     public void addPreference(Preference preference) {getPreferences().add(preference);}
     public List<Preference> getPreferences() {
         if(this.preferences == null) {

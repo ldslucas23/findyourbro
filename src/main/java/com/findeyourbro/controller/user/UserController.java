@@ -1,5 +1,7 @@
 package com.findeyourbro.controller.user;
 
+import java.io.IOException;
+
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +28,7 @@ public class UserController {
     
     @GetMapping("/{id}")
     @ApiOperation("Busca o todas as informações do usuário pelo id.")
-    public User getUser(@PathVariable Long id) throws NotFoundException {
+    public User getUser(@PathVariable Long id) throws NotFoundException, IOException {
        return userService.getUserById(id);       
     }
     

@@ -1,4 +1,4 @@
-package com.findeyourbro;
+package com.findeyourbro.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
