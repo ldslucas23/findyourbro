@@ -1,5 +1,6 @@
 package com.findeyourbro.controller.user;
 
+import javax.validation.Valid;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +25,7 @@ public class UserRegisterController {
     
     @PostMapping
     @ApiOperation("Registra um usuário.")
-    public User registerUser(@RequestBody User user) {
+    public User registerUser(@RequestBody @Valid User user) {
        return userService.saveUser(user);       
     }
     

@@ -68,7 +68,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setToken(token);
         loginResponse.setUserId(user.getId());
-        loginResponse.setUserName(user.getName());
+        loginResponse.setUserName(user.getEmail());
         return loginResponse;
     }
 }

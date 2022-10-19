@@ -1,7 +1,7 @@
 package com.findeyourbro.model;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -15,8 +15,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,11 +34,15 @@ public class User implements Serializable, UserDetails{
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
+    @NotNull
     private String name;
+    @NotNull
     private String email;
     private String password;
+    @NotNull
     private String gender;
-    private LocalDateTime birthDate;
+    @NotNull
+    private LocalDate birthDate;
     @JsonIgnore
     private String profileImageKey;
     @Transient
@@ -46,7 +52,7 @@ public class User implements Serializable, UserDetails{
     @JoinTable(name="user_preferences", joinColumns=
     {@JoinColumn(name="user_id")}, inverseJoinColumns=
     {@JoinColumn(name="preference_id")})
-    private List<Preference> preferences;
+    private List<Preference> sports_interests;
     @Transient
     @JsonIgnore
     private boolean accountNonExpired;
@@ -59,7 +65,16 @@ public class User implements Serializable, UserDetails{
     @Transient
     @JsonIgnore
     private boolean enabled;
-
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Contact> contacts;
+    private String bio;
+    @Transient
+    private List<Double> lateLng;
+    @JsonIgnore
+    private Double late;
+    @JsonIgnore
+    private Double lng;
+    
     public Long getId() {return id;}
     public void setId(Long id) {this.id = id;}
     public String getName() {return name;}
@@ -70,22 +85,23 @@ public class User implements Serializable, UserDetails{
     public void setPassword(String password) {this.password = password;}
     public String getGender() {return gender;}
     public void setGender(String gender) {this.gender = gender;}
-    public LocalDateTime getBirthDate() {return birthDate;}
-    public void setBirthDate(LocalDateTime birthDate) {this.birthDate = birthDate;}
+    public LocalDate getBirthDate() {return birthDate;}
+    public void setBirthDate(LocalDate birthDate) {this.birthDate = birthDate;}
     public String getProfileImageBase64() {return profileImageBase64;}
     public void setProfileImageBase64(String profileImageBase64) {this.profileImageBase64 = profileImageBase64;}
     public String getProfileImageName() {return profileImageName;}
     public void setProfileImageName(String profileImageName) {this.profileImageName = profileImageName;}  
     public String getProfileImageKey() {return profileImageKey;}
-    public void setProfileImageKey(String profileImageKey) {this.profileImageKey = profileImageKey;}
-    public void addPreference(Preference preference) {getPreferences().add(preference);}
-    public List<Preference> getPreferences() {
-        if(this.preferences == null) {
-            this.preferences = new ArrayList<>();
+    public void setProfileImageKey(String profileImageKey) {this.profileImageKey = profileImageKey;}    
+    public List<Preference> getSports_interests() {
+        if(this.sports_interests == null) {
+            this.sports_interests = new ArrayList<>();
         }
-        return preferences;
+        return sports_interests;
     }
-    public void setPreferences(List<Preference> preferences) {this.preferences = preferences;}
+    public void setSports_interests(List<Preference> sports_interests) {
+        this.sports_interests = sports_interests;
+    }
     @Override
     public boolean isAccountNonExpired() {return this.accountNonExpired;}
     public void setAccountNonExpired(boolean accountNonExpired) {this.accountNonExpired = accountNonExpired;}
@@ -99,7 +115,17 @@ public class User implements Serializable, UserDetails{
     public boolean isEnabled() {return this.enabled;}
     public void setEnabled(boolean enabled) {this.enabled = enabled;}
     @Override
-    public String getUsername() {return this.email;}   
+    public String getUsername() {return this.email;}     
+    public List<Contact> getContacts() {return contacts;}
+    public void setContacts(List<Contact> contacts) {this.contacts = contacts;} 
+    public String getBio() {return bio;}
+    public void setBio(String bio) {this.bio = bio;}
+    public List<Double> getLateLng() { return lateLng; }
+    public void setLateLng(List<Double> lateLng) { this.lateLng = lateLng;} 
+    public Double getLate() {return late;}
+    public void setLate(Double late) {this.late = late;}
+    public Double getLng() {return lng;}
+    public void setLng(Double lng) {this.lng = lng;}
     @Override
     public String toString() {
         return "User [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", gender="
