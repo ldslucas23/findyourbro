@@ -48,6 +48,7 @@ public class User implements Serializable, UserDetails{
     @Transient
     private String profileImageBase64;
     private String profileImageName;
+    private String photo;
     @ManyToMany(cascade=CascadeType.PERSIST)
     @JoinTable(name="user_preferences", joinColumns=
     {@JoinColumn(name="user_id")}, inverseJoinColumns=
@@ -125,7 +126,9 @@ public class User implements Serializable, UserDetails{
     public Double getLate() {return late;}
     public void setLate(Double late) {this.late = late;}
     public Double getLng() {return lng;}
-    public void setLng(Double lng) {this.lng = lng;}
+    public void setLng(Double lng) {this.lng = lng;}   
+    public String getPhoto() {return photo;}
+    public void setPhoto(String photo) {this.photo = photo;}
     @Override
     public String toString() {
         return "User [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", gender="
@@ -135,7 +138,6 @@ public class User implements Serializable, UserDetails{
     public int hashCode() {
         return Objects.hash(id);
     }
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -150,5 +152,6 @@ public class User implements Serializable, UserDetails{
     
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {return null;}
+    
     
 }

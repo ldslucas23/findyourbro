@@ -56,8 +56,9 @@ public class UserService  implements UserDetailsService{
         }        
         
         if(StringUtils.isNotBlank(user.get().getProfileImageKey())){
-            user.get().setProfileImageBase64(fileService.getImageFileBase64(user.get().getProfileImageKey()));   
+            user.get().setPhoto(fileService.getImageAsUrl(user.get().getProfileImageKey()));   
         }
+        user.get().setProfileImageBase64(null);
         user.get().setPassword(null);
         return user.get();
     }
@@ -94,6 +95,10 @@ public class UserService  implements UserDetailsService{
             }
             user.setId(id);
             userRepository.save(user);
+            if(StringUtils.isNotBlank(user.getProfileImageKey())){
+                user.setPhoto(fileService.getImageAsUrl(user.getProfileImageKey()));   
+            }
+            user.setProfileImageBase64(null);
             user.setPassword(null);
         } 
         return user;
@@ -157,7 +162,9 @@ public class UserService  implements UserDetailsService{
                 fileService.deleteImageByKey(oldUser.getProfileImageKey());   
             }
             fileService.storeImage(updatedUser.getProfileImageName(), updatedUser.getProfileImageBase64(), updatedUser.getProfileImageKey());
-        }        
+        }else {
+            updatedUser.setProfileImageKey(oldUser.getProfileImageKey());
+        }       
     }
     
     private Long getUserIdByToken(String atuhHeaderAuthorization) {
