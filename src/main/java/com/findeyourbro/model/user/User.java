@@ -1,4 +1,4 @@
-package com.findeyourbro.model;
+package com.findeyourbro.model.user;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -20,6 +20,9 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import com.findeyourbro.model.contact.Contact;
+import com.findeyourbro.model.notification.Notification;
+import com.findeyourbro.model.preference.Preference;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -68,6 +71,8 @@ public class User implements Serializable, UserDetails{
     private boolean enabled;
     @OneToMany(cascade = CascadeType.ALL)
     private List<Contact> contacts;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Notification> notifications;
     private String bio;
     @Transient
     private List<Double> lateLng;
@@ -75,7 +80,7 @@ public class User implements Serializable, UserDetails{
     private Double late;
     @JsonIgnore
     private Double lng;
-    
+      
     public Long getId() {return id;}
     public void setId(Long id) {this.id = id;}
     public String getName() {return name;}
@@ -117,8 +122,16 @@ public class User implements Serializable, UserDetails{
     public void setEnabled(boolean enabled) {this.enabled = enabled;}
     @Override
     public String getUsername() {return this.email;}     
-    public List<Contact> getContacts() {return contacts;}
+    public List<Contact> getContacts() {
+        if(contacts == null) {
+            contacts = new ArrayList<>();
+        }
+        return contacts;
+    }
     public void setContacts(List<Contact> contacts) {this.contacts = contacts;} 
+    public void addContact(Contact contact) {
+        getContacts().add(contact);
+    }
     public String getBio() {return bio;}
     public void setBio(String bio) {this.bio = bio;}
     public List<Double> getLateLng() { return lateLng; }
@@ -152,6 +165,18 @@ public class User implements Serializable, UserDetails{
     
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {return null;}
+    public List<Notification> getNotifications() {
+        if(notifications == null) {
+            notifications = new ArrayList<>();
+        }
+        return notifications;
+    }
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
+    }
     
-    
+    public void addNotification(Notification notificaion) {
+        getNotifications().add(notificaion);
+    }   
+       
 }

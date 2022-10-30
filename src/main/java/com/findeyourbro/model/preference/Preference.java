@@ -1,4 +1,6 @@
-package com.findeyourbro.model;
+package com.findeyourbro.model.preference;
+
+import com.findeyourbro.model.user.User;
 
 import java.io.Serializable;
 import java.util.List;

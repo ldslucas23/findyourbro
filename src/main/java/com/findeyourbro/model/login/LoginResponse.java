@@ -1,4 +1,4 @@
-package com.findeyourbro.model;
+package com.findeyourbro.model.login;
 
 public class LoginResponse {
 

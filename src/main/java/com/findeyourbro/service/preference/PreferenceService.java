@@ -1,11 +1,11 @@
-package com.findeyourbro.service;
+package com.findeyourbro.service.preference;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.findeyourbro.model.Preference;
+import com.findeyourbro.model.preference.Preference;
 import com.findeyourbro.repository.PreferenceRepository;
 
 @Service

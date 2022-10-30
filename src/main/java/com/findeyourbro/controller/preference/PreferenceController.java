@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.findeyourbro.model.Preference;
-import com.findeyourbro.service.PreferenceService;
+import com.findeyourbro.model.preference.Preference;
+import com.findeyourbro.service.preference.PreferenceService;
 
 import io.swagger.annotations.ApiOperation;
 

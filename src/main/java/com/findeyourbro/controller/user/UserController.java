@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.findeyourbro.model.User;
-import com.findeyourbro.service.UserService;
+import com.findeyourbro.model.user.User;
+import com.findeyourbro.service.user.UserService;
 
 import io.swagger.annotations.ApiOperation;
 

@@ -17,8 +17,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.findeyourbro.model.LoginResponse;
-import com.findeyourbro.model.User;
+import com.findeyourbro.model.login.LoginResponse;
+import com.findeyourbro.model.user.User;
 import com.google.gson.Gson;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
