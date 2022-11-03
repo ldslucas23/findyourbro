@@ -67,6 +67,14 @@ public class UserService  implements UserDetailsService{
         return user.get();
     }
     
+    public User getUserByToken(String authHeader) {
+        Optional<User> user = userRepository.findById(getUserIdByToken(authHeader)); 
+        if (!user.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado", new Throwable());
+        }
+        return user.get();
+    }
+    
     private void fillUserContacts(List<Contact> contacts) {
         for(Contact contact : contacts) {
             Optional<User> userContact = userRepository.findById(contact.getContactId()); 
@@ -234,7 +242,7 @@ public class UserService  implements UserDetailsService{
         if(!recipient.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Desinatário não encontrado", null);
         }
-        notification.setType(NotificationEnum.RECEIVED);
+        notification.setType(NotificationEnum.INVITE);
         recipient.get().addNotification(notification);
         userRepository.save(recipient.get());
         
@@ -283,7 +291,7 @@ public class UserService  implements UserDetailsService{
         
         for(int notificationPos = 0; notificationPos < recipient.getNotifications().size(); notificationPos++) {
             if(recipient.getNotifications().get(notificationPos).getOwner() == notification.getOwner() 
-                    && (recipient.getNotifications().get(notificationPos).getType().equals(NotificationEnum.RECEIVED))){
+                    && (recipient.getNotifications().get(notificationPos).getType().equals(NotificationEnum.INVITE))){
                 recipient.getNotifications().remove(notificationPos);
                 break;
             }
@@ -291,6 +299,7 @@ public class UserService  implements UserDetailsService{
         
     }
     
+
     private void addContact(User owner, User recipient) {
         Contact contact = new Contact();
         contact.setContactId(recipient.getId());

@@ -1,36 +1,38 @@
 package com.findeyourbro.service.notification;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import com.findeyourbro.model.notification.Notification;
 import com.findeyourbro.model.notification.NotificationEnum;
+import com.findeyourbro.repository.notification.NotificationRepository;
 import com.findeyourbro.service.user.UserService;
 
 @Service
 public class NotificationService {
     
     private UserService userService;
+    private NotificationRepository notificationRepository;
     
-    NotificationService(UserService userService){
+    NotificationService(UserService userService, NotificationRepository notificationRepository){
         this.userService = userService;
+        this.notificationRepository = notificationRepository;
     }
     
+    public Optional<Notification> findByIdAndRecipient(Long id, Long recipient){
+        return notificationRepository.findByIdAndRecipient(id, recipient);
+    } 
     
-    public void sendNotification(Notification notification) {
-        if(NotificationEnum.SEND.equals(notification.getType())) {
-            userService.sendNotification(notification);
-        }
+    public void sendInviteNotification(Notification notification) { 
+        userService.sendNotification(notification);
     }
     
     public void acceptNotification(Notification notification) {
-        if(NotificationEnum.ACCEPTED.equals(notification.getType())) {
-            userService.acceptNotification(notification);
-        } 
+        userService.acceptNotification(notification);
     }
     
     public void rejectNotification(Notification notification) {
-        if(NotificationEnum.REJECT.equals(notification.getType())) {
-            userService.rejectNotification(notification);
-        } 
+        userService.rejectNotification(notification);
     }
 }
