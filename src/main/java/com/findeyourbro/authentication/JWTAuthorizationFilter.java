@@ -8,13 +8,16 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
@@ -33,22 +36,28 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
             return;
         }
 
-        UsernamePasswordAuthenticationToken authentication = getAuthentication(req);
+        UsernamePasswordAuthenticationToken authentication = getAuthentication(req, res);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(req, res);
     }
 
     // Reads the JWT from the Authorization header, and then uses JWT to validate the token
-    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
+    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request,  HttpServletResponse response) {
         String token = request.getHeader(SecurityConstants.HEADER_STRING);
 
         if (token != null) {
+            String user = null;
             // parse the token.
-            String user = JWT.require(Algorithm.HMAC512(SecurityConstants.SECRET.getBytes()))
-                    .build()
-                    .verify(token.replace(SecurityConstants.TOKEN_PREFIX, ""))
-                    .getSubject();
+            try {
+                 user = JWT.require(Algorithm.HMAC512(SecurityConstants.SECRET.getBytes()))
+                        .build()
+                        .verify(token.replace(SecurityConstants.TOKEN_PREFIX, ""))
+                        .getSubject(); 
+            }catch (JWTVerificationException e) {
+                response.setStatus(403);
+            }
+
 
             if (user != null) {
                 // new arraylist means authorities
