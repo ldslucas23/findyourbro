@@ -115,9 +115,12 @@ public class UserService  implements UserDetailsService{
             verifyUserToken(authHeader, id);
             saveUserProfileImage(user, userFinded.get());
             user.setPassword(userFinded.get().getPassword());
-            if(user.getLateLng() != null && !user.getLateLng().isEmpty()) {
+            if(user.getLateLng() == null || user.getLateLng().isEmpty()) {
+                user.setLate(userFinded.get().getLate());
+                user.setLng(userFinded.get().getLng()); 
+            }else {
                 user.setLate(user.getLateLng().get(0));
-                user.setLng(user.getLateLng().get(1));
+                user.setLng(user.getLateLng().get(1));   
             }
             user.setId(id);
             userRepository.save(user);
@@ -143,28 +146,30 @@ public class UserService  implements UserDetailsService{
         double p4 = 0.0;
         double p5 = 0.0;
         double km = 0.0;
-        
-        for(User user : users) {
-            if(user.getId() != loggedUser.getId()) {
-              if(validateUsersFindeds(loggedUser, user, preferenceId)) {
-                  // Inicio dos calculos 1° parte
-                  p1 = Math.cos((90 - loggedUser.getLate()) * (Math.PI / 180));
-                  // Inicio dos calculos 2° parte
-                  p2 = Math.cos((90 - user.getLate()) * (Math.PI / 180));
-                  // Inicio dos calculos 3° parte
-                  p3 = Math.sin((90 - loggedUser.getLate()) * (Math.PI / 180));
-                  // Inicio dos calculos 4° parte
-                  p4 = Math.sin((90 - user.getLate()) * (Math.PI / 180));
-                  // Inicio dos calculos 5° parte
-                  p5 = Math.cos((loggedUser.getLng() - user.getLng()) * (Math.PI / 180));
-                  km = ((Math.acos((p1 * p2) + (p3 * p4 * p5)) * 6371) * 1.15);
-                  if (km <= maxDistance) {
-                   user.setPassword(null);
-                   findedUsers.add(user);
-                  }        
-               }                  
-             }
-         }     
+        if(loggedUser.getLate() != null && loggedUser.getLng() != null) {
+            for(User user : users) {
+                if(user.getId() != loggedUser.getId()) {
+                  if(validateUsersFindeds(loggedUser, user, preferenceId)) {
+                      // Inicio dos calculos 1° parte
+                      p1 = Math.cos((90 - loggedUser.getLate()) * (Math.PI / 180));
+                      // Inicio dos calculos 2° parte
+                      p2 = Math.cos((90 - user.getLate()) * (Math.PI / 180));
+                      // Inicio dos calculos 3° parte
+                      p3 = Math.sin((90 - loggedUser.getLate()) * (Math.PI / 180));
+                      // Inicio dos calculos 4° parte
+                      p4 = Math.sin((90 - user.getLate()) * (Math.PI / 180));
+                      // Inicio dos calculos 5° parte
+                      p5 = Math.cos((loggedUser.getLng() - user.getLng()) * (Math.PI / 180));
+                      km = ((Math.acos((p1 * p2) + (p3 * p4 * p5)) * 6371) * 1.15);
+                      if (km <= maxDistance) {
+                       user.setPassword(null);
+                       findedUsers.add(user);
+                      }        
+                   }                  
+                 }
+             }             
+        }
+    
         return findedUsers;
     }
     
@@ -178,7 +183,8 @@ public class UserService  implements UserDetailsService{
           && !userFinded.getNotifications().stream().filter(notification -> notification.getOwner() == loggedUser.getId() || 
                 notification.getRecipient() == loggedUser.getId()).findFirst().isPresent()
           && (!loggedUser.getContacts().stream().filter(contact -> contact.getContactId() == loggedUser.getId() || 
-                contact.getContactId() == loggedUser.getId()).findAny().isPresent());
+                contact.getContactId() == loggedUser.getId()).findAny().isPresent()) 
+          && userFinded.getLate() != null && userFinded.getLng() != null;
         
     }
     
