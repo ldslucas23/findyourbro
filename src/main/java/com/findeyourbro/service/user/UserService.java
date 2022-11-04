@@ -163,6 +163,9 @@ public class UserService  implements UserDetailsService{
                       km = ((Math.acos((p1 * p2) + (p3 * p4 * p5)) * 6371) * 1.15);
                       if (km <= maxDistance) {
                        user.setPassword(null);
+                       if(StringUtils.isNotBlank(user.getProfileImageKey())){
+                           user.setPhoto(fileService.getImageAsUrl(user.getProfileImageKey()));   
+                       }
                        findedUsers.add(user);
                       }        
                    }                  
