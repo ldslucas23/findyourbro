@@ -22,6 +22,7 @@ import com.findeyourbro.authentication.SecurityConstants;
 import com.findeyourbro.model.contact.Contact;
 import com.findeyourbro.model.notification.Notification;
 import com.findeyourbro.model.notification.NotificationEnum;
+import com.findeyourbro.model.response.StandardResponse;
 import com.findeyourbro.model.user.User;
 import com.findeyourbro.repository.UserRepository;
 import com.findeyourbro.service.file.FileService;
@@ -238,7 +239,7 @@ public class UserService  implements UserDetailsService{
     }
     
     //Esse método é para quando alguém envia solicitação de amizade
-    public void sendNotification(Notification notification) {       
+    public StandardResponse sendNotification(Notification notification) {       
         Optional<User> owner = userRepository.findById(notification.getOwner());
         if(!owner.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Remetente não encontrado", null);
@@ -253,12 +254,12 @@ public class UserService  implements UserDetailsService{
         }
         notification.setType(NotificationEnum.INVITE);
         recipient.get().addNotification(notification);
-        userRepository.save(recipient.get());
-        
+        userRepository.save(recipient.get());   
+        return new StandardResponse(200, null);   
     }
     
     //Esse método é para quando alguém aceita solicitação de amizade
-    public void acceptNotification(Notification notification) {
+    public StandardResponse acceptNotification(Notification notification) {
         Optional<User> owner = userRepository.findById(notification.getOwner());
         if(!owner.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Remetente não encontrado", null);
@@ -272,9 +273,10 @@ public class UserService  implements UserDetailsService{
         addContact(owner.get(), recipient.get());
         userRepository.save(owner.get());
         userRepository.save(recipient.get());
+        return new StandardResponse(200, null); 
     }
     
-    public void rejectNotification(Notification notification) {
+    public StandardResponse rejectNotification(Notification notification) {
         Optional<User> owner = userRepository.findById(notification.getOwner());
         if(!owner.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Remetente não encontrado", null);
@@ -287,6 +289,7 @@ public class UserService  implements UserDetailsService{
         removeNotificationsWhenAcceptNotification(owner.get(), recipient.get(), notification);
         userRepository.save(owner.get());
         userRepository.save(recipient.get());
+        return new StandardResponse(200, null);
     } 
     
     private void removeNotificationsWhenAcceptNotification(User owner, User recipient, Notification notification) {      

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.findeyourbro.model.notification.Notification;
 import com.findeyourbro.model.notification.NotificationEnum;
+import com.findeyourbro.model.response.StandardResponse;
 import com.findeyourbro.repository.notification.NotificationRepository;
 import com.findeyourbro.service.user.UserService;
 
@@ -24,15 +25,15 @@ public class NotificationService {
         return notificationRepository.findByIdAndRecipient(id, recipient);
     } 
     
-    public void sendInviteNotification(Notification notification) { 
-        userService.sendNotification(notification);
+    public StandardResponse sendInviteNotification(Notification notification) { 
+        return userService.sendNotification(notification);
     }
     
-    public void acceptNotification(Notification notification) {
-        userService.acceptNotification(notification);
+    public StandardResponse acceptNotification(Notification notification) {
+       return userService.acceptNotification(notification);
     }
     
-    public void rejectNotification(Notification notification) {
-        userService.rejectNotification(notification);
+    public StandardResponse rejectNotification(Notification notification) {
+       return userService.rejectNotification(notification);
     }
 }

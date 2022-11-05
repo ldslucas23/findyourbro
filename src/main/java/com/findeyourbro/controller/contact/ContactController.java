@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.findeyourbro.model.response.StandardResponse;
 import com.findeyourbro.model.user.User;
 import com.findeyourbro.service.contact.ContactService;
 import com.findeyourbro.service.user.UserService;
@@ -38,14 +39,14 @@ public class ContactController {
     
     @PostMapping("/invite")
     @ApiOperation("Aceita um pedido de amizade para o contato")
-    public void accept(@RequestHeader("Authorization") String authHeader, @RequestParam Long id,  @RequestParam(required = false) Integer accept){
-        contactService.acceptUser(authHeader, id, accept == null ? 0 : accept);       
+    public StandardResponse accept(@RequestHeader("Authorization") String authHeader, @RequestParam Long id,  @RequestParam(required = false) Integer accept){
+        return contactService.acceptUser(authHeader, id, accept == null ? 0 : accept);       
     }
     
     @PostMapping("/invite/{contactId}")
     @ApiOperation("Envia um pedido ou aceita um pedido de amizade para o contato")
-    public void inviteUser(@RequestHeader("Authorization") String authHeader, @PathVariable Long contactId){
-        contactService.inviteUser(authHeader, contactId);       
+    public StandardResponse inviteUser(@RequestHeader("Authorization") String authHeader, @PathVariable Long contactId){
+       return contactService.inviteUser(authHeader, contactId);       
     }
     
 }
