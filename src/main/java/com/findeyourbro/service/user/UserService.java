@@ -4,6 +4,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.crypto.KeyGenerator;
 
@@ -72,7 +73,7 @@ public class UserService  implements UserDetailsService{
     
     private void removePedingNotifications(User user) {
         if(user.getNotifications() != null && !user.getNotifications().isEmpty()) {
-            user.setNotifications(user.getNotifications().stream().filter(notification -> !notification.getType().equals(NotificationEnum.PENDING)).toList());
+            user.setNotifications(user.getNotifications().stream().filter(notification -> !notification.getType().equals(NotificationEnum.PENDING)).collect(Collectors.toList()));
         }
     }
     
