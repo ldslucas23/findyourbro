@@ -7,6 +7,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.findeyourbro.model.user.User;
 
 @Entity
 @Table
@@ -21,6 +24,8 @@ public class Notification {
     private Date datetime;
     private Long owner;
     private Long recipient;
+    @Transient
+    private User ownerUser;
     
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id;}
@@ -35,6 +40,7 @@ public class Notification {
     public Long getOwner() {return owner;}
     public void setOwner(Long owner) {this.owner = owner;}
     public Long getRecipient() {return recipient;}
-    public void setRecipient(Long recipient) {this.recipient = recipient;} 
-    
+    public void setRecipient(Long recipient) {this.recipient = recipient;}
+    public User getOwnerUser() {return ownerUser;}
+    public void setOwnerUser(User ownerUser) {this.ownerUser = ownerUser;}   
 }

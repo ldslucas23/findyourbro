@@ -67,8 +67,26 @@ public class UserService  implements UserDetailsService{
         user.get().setProfileImageBase64(null);
         user.get().setPassword(null);
         removePedingNotifications(user.get());
-        
+        buildLoggedUserNotifications(user.get());
         return user.get();
+    }
+    
+    private void buildLoggedUserNotifications(User user) {
+        if(user.getNotifications() != null && !user.getNotifications().isEmpty()) {
+            for(Notification notification : user.getNotifications()) {
+                Optional<User> ownerNotification = userRepository.findById(notification.getOwner());
+                if(ownerNotification.isPresent()) {
+                    if(StringUtils.isNotBlank(ownerNotification.get().getProfileImageKey())){
+                        ownerNotification.get().setPhoto(fileService.getImageAsUrl(ownerNotification.get().getProfileImageKey()));   
+                    }
+                    ownerNotification.get().setContacts(null);
+                    ownerNotification.get().setPassword(null);
+                    ownerNotification.get().setNotifications(new ArrayList<>());
+                    notification.setOwnerUser(ownerNotification.get());
+                }   
+            }
+        }
+       
     }
     
     private void removePedingNotifications(User user) {
@@ -94,6 +112,7 @@ public class UserService  implements UserDetailsService{
                 }
                 userContact.get().setContacts(null);
                 userContact.get().setPassword(null);
+                userContact.get().setNotifications(new ArrayList<>());
                 contact.setUser(userContact.get());
             }        
         }
@@ -174,11 +193,13 @@ public class UserService  implements UserDetailsService{
                       // Inicio dos calculos 5° parte
                       p5 = Math.cos((loggedUser.getLng() - user.getLng()) * (Math.PI / 180));
                       km = ((Math.acos((p1 * p2) + (p3 * p4 * p5)) * 6371) * 1.15);
-                      if (km <= maxDistance) {
-                       user.setPassword(null);
+                      if (km <= maxDistance) {           
                        if(StringUtils.isNotBlank(user.getProfileImageKey())){
                            user.setPhoto(fileService.getImageAsUrl(user.getProfileImageKey()));   
                        }
+                       user.setContacts(null);
+                       user.setPassword(null);
+                       user.setNotifications(new ArrayList<>());   
                        findedUsers.add(user);
                       }        
                    }                  
