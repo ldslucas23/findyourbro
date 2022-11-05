@@ -65,7 +65,15 @@ public class UserService  implements UserDetailsService{
         
         user.get().setProfileImageBase64(null);
         user.get().setPassword(null);
+        removePedingNotifications(user.get());
+        
         return user.get();
+    }
+    
+    private void removePedingNotifications(User user) {
+        if(user.getNotifications() != null && !user.getNotifications().isEmpty()) {
+            user.setNotifications(user.getNotifications().stream().filter(notification -> !notification.getType().equals(NotificationEnum.PENDING)).toList());
+        }
     }
     
     public User getUserByToken(String authHeader) {
@@ -124,10 +132,13 @@ public class UserService  implements UserDetailsService{
                 user.setLng(user.getLateLng().get(1));   
             }
             user.setId(id);
+            user.setNotifications(userFinded.get().getNotifications());
+            
             userRepository.save(user);
             if(StringUtils.isNotBlank(user.getProfileImageKey())){
                 user.setPhoto(fileService.getImageAsUrl(user.getProfileImageKey()));   
             }
+            removePedingNotifications(user);
             user.setProfileImageBase64(null);
             user.setPassword(null);
         } 
@@ -239,7 +250,15 @@ public class UserService  implements UserDetailsService{
     }
     
     //Esse método é para quando alguém envia solicitação de amizade
-    public StandardResponse sendNotification(Notification notification) {       
+    public StandardResponse sendNotification(Notification notification) {               
+        Optional<User> recipient = userRepository.findById(notification.getRecipient());
+        if(!recipient.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Desinatário não encontrado", null);
+        }
+        notification.setType(NotificationEnum.INVITE);
+        recipient.get().addNotification(notification);
+        userRepository.save(recipient.get());   
+        
         Optional<User> owner = userRepository.findById(notification.getOwner());
         if(!owner.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Remetente não encontrado", null);
@@ -248,13 +267,6 @@ public class UserService  implements UserDetailsService{
         owner.get().addNotification(notification);
         userRepository.save(owner.get());
         
-        Optional<User> recipient = userRepository.findById(notification.getRecipient());
-        if(!recipient.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Desinatário não encontrado", null);
-        }
-        notification.setType(NotificationEnum.INVITE);
-        recipient.get().addNotification(notification);
-        userRepository.save(recipient.get());   
         return new StandardResponse(200, null);   
     }
     

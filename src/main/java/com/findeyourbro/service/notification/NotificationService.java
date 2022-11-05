@@ -5,7 +5,6 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.findeyourbro.model.notification.Notification;
-import com.findeyourbro.model.notification.NotificationEnum;
 import com.findeyourbro.model.response.StandardResponse;
 import com.findeyourbro.repository.notification.NotificationRepository;
 import com.findeyourbro.service.user.UserService;

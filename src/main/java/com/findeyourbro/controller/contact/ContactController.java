@@ -45,8 +45,8 @@ public class ContactController {
     
     @PostMapping("/invite/{contactId}")
     @ApiOperation("Envia um pedido ou aceita um pedido de amizade para o contato")
-    public StandardResponse inviteUser(@RequestHeader("Authorization") String authHeader, @PathVariable Long contactId){
-       return contactService.inviteUser(authHeader, contactId);       
+    public StandardResponse inviteUser(@RequestHeader("Authorization") String authHeader, @PathVariable Long contactId, @RequestParam Long preferenceId){
+       return contactService.inviteUser(authHeader, contactId, preferenceId);       
     }
     
 }

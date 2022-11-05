@@ -71,7 +71,7 @@ public class User implements Serializable, UserDetails{
     private boolean enabled;
     @OneToMany(cascade = CascadeType.ALL)
     private List<Contact> contacts;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Notification> notifications;
     private String bio;
     @Transient
