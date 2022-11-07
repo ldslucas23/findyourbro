@@ -9,10 +9,9 @@ import com.findeyourbro.model.chat.ChatMessage;
 import com.findeyourbro.model.chat.MessageStatus;
 
 @Repository
-public interface ChatMessageRepository extends JpaRepository<ChatMessage,String> {
+public interface ChatMessageRepository extends JpaRepository<ChatMessage,Long> {
 
-    long countBySenderIdAndRecipientIdAndStatus(
-            String senderId, String recipientId, MessageStatus status);
+    long countBySenderIdAndRecipientIdAndStatus(Long senderId, Long recipientId, MessageStatus status);
 
     List<ChatMessage> findByChatId(String chatId);
 }

@@ -17,7 +17,7 @@ public class ChatRoomService {
     }
     
     public Optional<String> getChatId(
-            String senderId, String recipientId, boolean createIfNotExist) {
+            Long senderId, Long recipientId, boolean createIfNotExist) {
 
          return chatRoomRepository
                 .findBySenderIdAndRecipientId(senderId, recipientId)
@@ -30,14 +30,14 @@ public class ChatRoomService {
                             String.format("%s_%s", senderId, recipientId);
 
                     ChatRoom senderRecipient = new ChatRoom();
-                    senderRecipient.setSenderId(senderId);
+                    senderRecipient.setSenderId(String.valueOf(senderId));
                     senderRecipient.setChatId(chatId);
-                    senderRecipient.setRecipientId(recipientId);
+                    senderRecipient.setRecipientId(String.valueOf(recipientId));
 
                     ChatRoom recipientSender = new ChatRoom();
                     recipientSender.setChatId(chatId);
-                    recipientSender.setSenderId(recipientId);
-                    recipientSender.setRecipientId(senderId);
+                    recipientSender.setSenderId(String.valueOf(recipientId));
+                    recipientSender.setRecipientId(String.valueOf(senderId));
 
                     chatRoomRepository.save(senderRecipient);
                     chatRoomRepository.save(recipientSender);

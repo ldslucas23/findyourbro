@@ -9,5 +9,5 @@ import com.findeyourbro.model.chat.ChatRoom;
 
 @Repository
 public interface ChatRoomRepository extends JpaRepository<ChatRoom,String> {
-    Optional<ChatRoom> findBySenderIdAndRecipientId(String senderId, String recipientId);
+    Optional<ChatRoom> findBySenderIdAndRecipientId(Long senderId, Long recipientId);
 }
