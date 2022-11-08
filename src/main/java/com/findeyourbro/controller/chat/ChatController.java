@@ -4,6 +4,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.findeyourbro.model.chat.ChatMessage;
 import com.findeyourbro.model.chat.ChatNotification;
@@ -11,6 +12,7 @@ import com.findeyourbro.service.chat.ChatMessageService;
 import com.findeyourbro.service.chat.ChatRoomService;
 
 @Controller
+@CrossOrigin("*")
 public class ChatController {
    
     private SimpMessagingTemplate messagingTemplate;
