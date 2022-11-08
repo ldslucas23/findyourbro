@@ -1,6 +1,7 @@
 package com.findeyourbro.service.contact;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class ContactService {
         Notification newNotification = new Notification();     
         newNotification.setTitle("Solicitação de amizade");
         newNotification.setDescription(buildInviteUserMessage(owner.getName(), preferenceId));
-        newNotification.setDatetime(LocalDateTime.now(););
+        newNotification.setDatetime(java.sql.Date.valueOf(LocalDate.now()));
         newNotification.setOwner(owner.getId());
         newNotification.setRecipient(id);
         newNotification.setType(NotificationEnum.INVITE);
