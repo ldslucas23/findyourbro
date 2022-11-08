@@ -30,14 +30,14 @@ public class ChatRoomService {
                             String.format("%s_%s", senderId, recipientId);
 
                     ChatRoom senderRecipient = new ChatRoom();
-                    senderRecipient.setSenderId(String.valueOf(senderId));
+                    senderRecipient.setSenderId(senderId);
                     senderRecipient.setChatId(chatId);
-                    senderRecipient.setRecipientId(String.valueOf(recipientId));
+                    senderRecipient.setRecipientId(recipientId);
 
                     ChatRoom recipientSender = new ChatRoom();
                     recipientSender.setChatId(chatId);
-                    recipientSender.setSenderId(String.valueOf(recipientId));
-                    recipientSender.setRecipientId(String.valueOf(senderId));
+                    recipientSender.setSenderId(recipientId);
+                    recipientSender.setRecipientId(senderId);
 
                     chatRoomRepository.save(senderRecipient);
                     chatRoomRepository.save(recipientSender);

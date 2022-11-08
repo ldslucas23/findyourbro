@@ -1,11 +1,14 @@
 package com.findeyourbro.model.chat;
 
-import java.time.LocalDate;
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table
@@ -20,7 +23,8 @@ public class ChatMessage {
     private String senderName;
     private String recipientName;
     private String content;
-    private LocalDate timestamp;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date timestamp;
     private MessageStatus status;
     
     public Long getId() {
@@ -66,10 +70,11 @@ public class ChatMessage {
     public void setContent(String content) {
         this.content = content;
     }
-    public LocalDate getTimestamp() {
+    
+    public Date getTimestamp() {
         return timestamp;
     }
-    public void setTimestamp(LocalDate timestamp) {
+    public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
     public MessageStatus getStatus() {

@@ -31,7 +31,7 @@ public class ContactService {
         Notification newNotification = new Notification();     
         newNotification.setTitle("Solicitação de amizade");
         newNotification.setDescription(buildInviteUserMessage(owner.getName(), preferenceId));
-        newNotification.setDatetime(java.sql.Date.valueOf(LocalDate.now()));
+        newNotification.setDatetime(LocalDateTime.now(););
         newNotification.setOwner(owner.getId());
         newNotification.setRecipient(id);
         newNotification.setType(NotificationEnum.INVITE);
