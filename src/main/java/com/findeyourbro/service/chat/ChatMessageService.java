@@ -1,6 +1,5 @@
 package com.findeyourbro.service.chat;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +39,7 @@ public class ChatMessageService {
                 chatId.map(cId -> repository.findByChatId(cId)).orElse(new ArrayList<>());
 
         if(messages.size() > 0) {
-            updateStatuses(senderId, recipientId, MessageStatus.DELIVERED);
+          updateStatuses(senderId, recipientId, MessageStatus.DELIVERED);  
         }
 
         return messages;
@@ -59,15 +58,15 @@ public class ChatMessageService {
 
     public void updateStatuses(Long senderId, Long recipientId, MessageStatus status) {
         
-        ChatMessage sender = repository.findById(senderId).orElseThrow(() ->
-        new ResponseStatusException(HttpStatus.NOT_FOUND, "Mensagem não encontrada", new Throwable()));
-        sender.setStatus(status);
-        
-        ChatMessage recipient = repository.findById(recipientId).orElseThrow(() ->
-        new ResponseStatusException(HttpStatus.NOT_FOUND, "Mensagem não encontrada", new Throwable()));
-        sender.setStatus(status);
-        
-        repository.save(sender);
-        repository.save(recipient);
+        List<ChatMessage> chatMessages = repository.findBySenderIdAndrecipientId(senderId, recipientId);
+        if(chatMessages != null && !chatMessages.isEmpty()) {
+            for(ChatMessage chatMessage : chatMessages) {
+                ChatMessage sender = repository.findById(chatMessage.getId()).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Mensagem não encontrada", new Throwable()));
+                sender.setStatus(status);
+                repository.save(chatMessage);
+            }
+        }
+       
     }
 }
