@@ -1,5 +1,6 @@
 package com.findeyourbro.service.notification;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -35,4 +36,10 @@ public class NotificationService {
     public StandardResponse rejectNotification(Notification notification) {
        return userService.rejectNotification(notification);
     }
+    
+    public boolean isFindByOwnerAndRecipient(Long ownerId, Long recipientId){
+        List<Notification> notifications = notificationRepository.findByOwnerAndRecipient(ownerId, recipientId);
+        return notifications != null && !notifications.isEmpty();
+    }
+    
 }

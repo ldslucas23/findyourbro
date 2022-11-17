@@ -1,7 +1,6 @@
 package com.findeyourbro.service.contact;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -29,14 +28,18 @@ public class ContactService {
 
     public StandardResponse inviteUser(String authHeader, Long id, Long preferenceId) {
         User owner = userService.getUserByToken(authHeader);   
-        Notification newNotification = new Notification();     
-        newNotification.setTitle("Solicitação de amizade");
-        newNotification.setDescription(buildInviteUserMessage(owner.getName(), preferenceId));
-        newNotification.setDatetime(java.sql.Date.valueOf(LocalDate.now()));
-        newNotification.setOwner(owner.getId());
-        newNotification.setRecipient(id);
-        newNotification.setType(NotificationEnum.INVITE);
-        return notificationService.sendInviteNotification(newNotification);       
+        if(!notificationService.isFindByOwnerAndRecipient(owner.getId(), id)) {
+            Notification newNotification = new Notification();     
+            newNotification.setTitle("Solicitação de amizade");
+            newNotification.setDescription(buildInviteUserMessage(owner.getName(), preferenceId));
+            newNotification.setDatetime(java.sql.Date.valueOf(LocalDate.now()));
+            newNotification.setOwner(owner.getId());
+            newNotification.setRecipient(id);
+            newNotification.setType(NotificationEnum.INVITE);
+            return notificationService.sendInviteNotification(newNotification);  
+        }
+        return new StandardResponse(200, null);
+       
     }
     
     private String buildInviteUserMessage(String userName, Long preferenceId) {
@@ -56,11 +59,14 @@ public class ContactService {
         User owner = userService.getUserByToken(authHeader);
         Optional<Notification> notification = notificationService.findByIdAndRecipient(id, owner.getId());
         if(notification.isPresent()) {
-            if(accept == 1) {
-                return notificationService.acceptNotification(notification.get());     
-            }else {
-                return notificationService.rejectNotification(notification.get());      
+            if(!owner.getContacts().stream().filter(contact -> contact.getContactId() == notification.get().getOwner()).findAny().isPresent()) {
+                if(accept == 1) {
+                    return notificationService.acceptNotification(notification.get());     
+                }else {
+                    return notificationService.rejectNotification(notification.get());      
+                }  
             }
+            return new StandardResponse(200, null);
         }
         return new StandardResponse(500, "Erro ao aceitar convite");
     }

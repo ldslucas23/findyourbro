@@ -179,6 +179,7 @@ public class UserService  implements UserDetailsService{
         double p5 = 0.0;
         double km = 0.0;
         if(loggedUser.getLate() != null && loggedUser.getLng() != null) {
+            fillUserContacts(loggedUser.getContacts());
             for(User user : users) {
                 if(user.getId() != loggedUser.getId()) {
                   if(validateUsersFindeds(loggedUser, user, preferenceId)) {
@@ -219,8 +220,7 @@ public class UserService  implements UserDetailsService{
                 notification.getRecipient() == userFinded.getId()).findFirst().isPresent()
           && !userFinded.getNotifications().stream().filter(notification -> notification.getOwner() == loggedUser.getId() || 
                 notification.getRecipient() == loggedUser.getId()).findFirst().isPresent()
-          && (!loggedUser.getContacts().stream().filter(contact -> contact.getContactId() == loggedUser.getId() || 
-                contact.getContactId() == loggedUser.getId()).findAny().isPresent()) 
+          && (!loggedUser.getContacts().stream().filter(contact -> contact.getUser().getId() == userFinded.getId()).findAny().isPresent()) 
           && userFinded.getLate() != null && userFinded.getLng() != null;
         
     }
