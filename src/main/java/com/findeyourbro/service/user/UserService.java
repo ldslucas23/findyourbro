@@ -21,6 +21,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.findeyourbro.authentication.SecurityConstants;
 import com.findeyourbro.model.contact.Contact;
+import com.findeyourbro.model.group.Event;
 import com.findeyourbro.model.notification.Notification;
 import com.findeyourbro.model.notification.NotificationEnum;
 import com.findeyourbro.model.response.StandardResponse;
@@ -68,7 +69,30 @@ public class UserService  implements UserDetailsService{
         user.get().setPassword(null);
         removePedingNotifications(user.get());
         buildLoggedUserNotifications(user.get());
+        buildUserEvent(user.get());
         return user.get();
+    }
+    
+    private void buildUserEvent(User user) {
+        if(user.getEvents() != null && !user.getEvents().isEmpty()) {
+            for(Event event : user.getEvents()) {
+                if(StringUtils.isNotBlank(event.getProfileImageKey())){
+                    event.setPhoto(fileService.getImageAsUrl(event.getProfileImageKey()));   
+                }
+                /*
+                for(User userEvent : event.getParticipants()) {
+                    if(StringUtils.isNotBlank(userEvent.getProfileImageKey())){
+                        userEvent.setPhoto(fileService.getImageAsUrl(userEvent.getProfileImageKey()));   
+                    }
+                    userEvent.setPassword(null);
+                    userEvent.setContacts(null);
+                    //userEvent.setGroups(null);
+                    userEvent.setSports_interests(null);
+                    userEvent.setNotifications(null);
+                }
+                */
+            }
+        }
     }
     
     private void buildLoggedUserNotifications(User user) {
@@ -81,6 +105,7 @@ public class UserService  implements UserDetailsService{
                     }
                     ownerNotification.get().setContacts(null);
                     ownerNotification.get().setPassword(null);
+                    ownerNotification.get().setEvents(null);
                     ownerNotification.get().setNotifications(new ArrayList<>());
                     notification.setOwnerUser(ownerNotification.get());
                 }   
@@ -111,6 +136,7 @@ public class UserService  implements UserDetailsService{
                     userContact.get().setPhoto(fileService.getImageAsUrl(userContact.get().getProfileImageKey()));   
                 }
                 userContact.get().setContacts(null);
+                userContact.get().setEvents(null);
                 userContact.get().setPassword(null);
                 userContact.get().setNotifications(new ArrayList<>());
                 contact.setUser(userContact.get());
@@ -199,6 +225,7 @@ public class UserService  implements UserDetailsService{
                            user.setPhoto(fileService.getImageAsUrl(user.getProfileImageKey()));   
                        }
                        user.setContacts(null);
+                       user.setEvents(null);
                        user.setPassword(null);
                        user.setNotifications(new ArrayList<>());   
                        findedUsers.add(user);

@@ -27,7 +27,7 @@ public class Preference implements Serializable{
     @ManyToMany
     @JoinTable(name="user_preferences", joinColumns=
     {@JoinColumn(name="preference_id")}, inverseJoinColumns=
-      {@JoinColumn(name="user_id")})
+    {@JoinColumn(name="user_id")})
     private List<User> users;
     public String getName() {return name;}
     public void setName(String name) {this.name = name;}

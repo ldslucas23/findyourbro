@@ -21,6 +21,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import com.findeyourbro.model.contact.Contact;
+import com.findeyourbro.model.group.Event;
 import com.findeyourbro.model.notification.Notification;
 import com.findeyourbro.model.preference.Preference;
 import org.springframework.security.core.GrantedAuthority;
@@ -80,6 +81,11 @@ public class User implements Serializable, UserDetails{
     private Double late;
     @JsonIgnore
     private Double lng;
+    @ManyToMany(cascade=CascadeType.PERSIST)
+    @JoinTable(name="user_events", joinColumns=
+    {@JoinColumn(name="user_id ")}, inverseJoinColumns=
+    {@JoinColumn(name="event_id")})
+    private List<Event> events;
       
     public Long getId() {return id;}
     public void setId(Long id) {this.id = id;}
@@ -177,6 +183,19 @@ public class User implements Serializable, UserDetails{
     
     public void addNotification(Notification notificaion) {
         getNotifications().add(notificaion);
-    }   
-       
+    }
+    public List<Event> getEvents() {
+        if(this.events == null) {
+            this.events = new ArrayList<>();
+        }
+        return events;
+    }
+    public void setEvents(List<Event> groups) {
+        this.events = groups;
+    }
+    
+    public void addEvent(Event group) {
+        getEvents().add(group);
+    }
+    
 }
