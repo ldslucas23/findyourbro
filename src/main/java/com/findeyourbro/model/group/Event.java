@@ -23,6 +23,7 @@ import com.findeyourbro.model.user.User;
 @Table
 public class Event implements Serializable{
     
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
@@ -50,6 +51,8 @@ public class Event implements Serializable{
     private String profileImageName;
     private String photo;
     private LocalDate date;
+    private int subscribersNumber;
+    private int maxSubscribersNumber;
     
     public Long getId() {return id;}
     public void setId(Long id) {this.id = id;}
@@ -124,6 +127,18 @@ public class Event implements Serializable{
     }
     public void setDate(LocalDate date) {
         this.date = date;
-    }    
-       
+    }
+    public int getSubscribersNumber() {
+        return subscribersNumber;
+    }
+    public void setSubscribersNumber(int subscribersNumber) {
+        this.subscribersNumber = subscribersNumber;
+    }
+    public int getMaxSubscribersNumber() {
+        return maxSubscribersNumber;
+    }
+    public void setMaxSubscribersNumber(int maxSubscribersNumber) {
+        this.maxSubscribersNumber = maxSubscribersNumber;
+    }
+          
 }

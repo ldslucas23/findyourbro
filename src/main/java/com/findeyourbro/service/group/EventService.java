@@ -45,6 +45,7 @@ public class EventService {
             }
             event.setOwnerId(user.getId());
             saveEventProfileImage(event);
+            event.setSubscribersNumber(event.getSubscribersNumber()+1);
             Event savedEvent = eventRepository.saveAndFlush(event);   
             user.addEvent(savedEvent);
             userRepository.save(user);
@@ -76,9 +77,15 @@ public class EventService {
             if(!event.isPresent()) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Evento não encontrado", new Throwable());
             }
-            user.addEvent(event.get());
-            userRepository.save(user);  
-            return new StandardResponse(200, null);
+            if ((event.get().getSubscribersNumber()+1) <= event.get().getMaxSubscribersNumber()){
+                event.get().setSubscribersNumber(event.get().getSubscribersNumber()+1);
+                eventRepository.save(event.get());
+                user.addEvent(event.get());
+                userRepository.save(user); 
+                return new StandardResponse(200, null);
+            }
+            return new StandardResponse(500, "Número de participantes excedidos");
+            
         }catch(Exception e) {
             return new StandardResponse(500, null);
         }
